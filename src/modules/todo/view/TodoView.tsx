@@ -1,7 +1,7 @@
 import { useTodoViewModel } from "../viewmodel/useTodoViewModel";
 
 export default function TodoView() {
-    const { todos, text, setText, createTodo, removeTodo } = useTodoViewModel();
+    const { todos, text, setText, createTodo, deleteTodo } = useTodoViewModel();
 
     return (
         <div>
@@ -15,7 +15,7 @@ export default function TodoView() {
                 {todos.map((todo) => (
                     <li key={todo.id}>
                         {todo.text}
-                        <button onClick={() => removeTodo(todo.id)}>X</button>
+                        <button onClick={() => deleteTodo(todo.id)}>X</button>
                     </li>
                 ))}
             </ul>

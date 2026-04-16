@@ -1,17 +1,39 @@
 import { useState } from "react";
-import { useTodos } from "../../../store/TodoStore";
+import { useDispatch, useSelector } from "react-redux";
+import { addTodo, removeTodo } from "../todoSlice";
 import { todoService } from "../service/todoService";
 
+interface Todo {
+    id: string;
+    text: string;
+    // otros
+}
+
+interface TodoState {
+    todos: Todo[];
+}
+
+interface RootState {
+    todo: TodoState;
+}
+
 export const useTodoViewModel = () => {
-    const { todos, addTodo, removeTodo } = useTodos();
+    const dispatch = useDispatch();
+    const todos = useSelector((state: RootState) => state.todo.todos);
+
     const [text, setText] = useState("");
 
     const createTodo = () => {
         if (!text) return;
 
-        const newTodo = todoService.create(text);
-        addTodo(newTodo);
+        const newTodoRaw = todoService.create(text);
+        const newTodo = { ...newTodoRaw, id: String(newTodoRaw.id) };
+        dispatch(addTodo(newTodo));
         setText("");
+    };
+
+    const deleteTodo = (id: string) => {
+        dispatch(removeTodo(id));
     };
 
     return {
@@ -19,6 +41,6 @@ export const useTodoViewModel = () => {
         text,
         setText,
         createTodo,
-        removeTodo,
+        deleteTodo,
     };
 };
